@@ -38,7 +38,7 @@ MVP berjalan penuh di browser tanpa database dan tanpa login. Akun, template tam
 **Pertanyaan yang masih terbuka:**
 
 - [ ] Target pengguna: umum, atau segmen tertentu seperti fresh graduate?
-- [ ] Hosting: Vercel atau home server? Ini menentukan cara menjalankan Chromium untuk PDF.
+- [x] Hosting: server sendiri / VPS (diputuskan 27 Nov 2026). Chromium dipasang lewat Playwright.
 - [ ] Apakah antarmuka perlu dua bahasa (ID/EN) sejak MVP?
 
 ## 3. Tech stack
