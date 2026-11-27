@@ -1,6 +1,7 @@
 import type { ComponentType } from "react";
 import type { Resume } from "@/lib/schema";
 import { ClassicTemplate } from "@/templates/classic";
+import { MinimalTemplate } from "@/templates/minimal";
 import { ModernTemplate } from "@/templates/modern";
 
 export type TemplateDef = {
@@ -30,8 +31,17 @@ const modern: TemplateDef = {
   supports: { photo: true, sidebar: true },
 };
 
+const minimal: TemplateDef = {
+  id: "minimal",
+  name: "Minimal",
+  thumbnail: "/thumbnails/minimal.svg",
+  component: MinimalTemplate,
+  defaultTheme: { accent: "#2563eb", font: "Inter", fontSize: 10.5 },
+  supports: { photo: false, sidebar: false },
+};
+
 /** All available templates. */
-export const templates: TemplateDef[] = [classic, modern];
+export const templates: TemplateDef[] = [classic, modern, minimal];
 
 export function getTemplate(id: string): TemplateDef | undefined {
   return templates.find((t) => t.id === id);
