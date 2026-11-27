@@ -17,6 +17,18 @@ npm run test:pdf # uji PDF dengan server asli (setelah build)
 
 Memakai Node 22 (`nvm use`).
 
+## Penilaian AI (opsional)
+
+Salin `.env.example` ke `.env.local`, lalu isi `AI_BASE_URL`, `AI_API_KEY`, `AI_MODEL`, dan `AI_PROVIDER_NAME`. Selama salah satunya kosong, tombol **Penilaian AI** tidak tampil. Nyalakan ulang server setelah mengubahnya.
+
+- `AI_BASE_URL`: gateway bergaya OpenAI. Di server yang sama dengan 9router: `http://127.0.0.1:20128/v1`.
+- `AI_MODEL`: satu model tetap, bukan *combo* yang bisa beralih ke penyedia lain.
+- `AI_PROVIDER_NAME`: ditampilkan ke pengguna sebelum CV dikirim, jadi harus menyebut penyedia yang sebenarnya.
+- Batas bawaan: 5 penilaian per pengunjung dan 100 per hari untuk seluruh server (`AI_DAILY_LIMIT_PER_CLIENT`, `AI_DAILY_LIMIT_TOTAL`). Hitungan tersimpan di memori dan kembali nol saat server dinyalakan ulang, jadi pasang juga batas belanja di penyedia. Pengunjung dibedakan lewat `X-Forwarded-For` dari reverse proxy.
+- Satu penilaian bisa memanggil model dua kali jika jawaban pertama tidak sesuai format.
+- Atur timeout reverse proxy minimal 200 detik.
+- Jangan mencatat isi request di reverse proxy maupun gateway.
+
 ## PDF di server
 
 Tombol **Unduh PDF** memakai Chromium di server (Playwright). Pasang sekali di mesin yang menjalankan aplikasi:

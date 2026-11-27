@@ -317,7 +317,7 @@ Aturan lengkap untuk AI ada di `CLAUDE.md` di root proyek ini (salin ke file atu
 **Keputusan teknis:**
 
 - AI diakses lewat 9router di server yang sama: browser → server aplikasi → 9router → penyedia model. Hermes Agent tidak dipakai, karena API-nya memberi akses ke seluruh alat agent, termasuk terminal, padahal teks CV berasal dari pengunjung.
-- Konfigurasi hanya di server: `AI_BASE_URL`, `AI_API_KEY`, `AI_MODEL` (API bergaya OpenAI). Kunci tidak pernah dikirim ke browser atau disimpan di git.
+- Konfigurasi hanya di server: `AI_BASE_URL`, `AI_API_KEY`, `AI_MODEL`, `AI_PROVIDER_NAME` (API bergaya OpenAI). Fitur mati sampai keempatnya terisi. Kunci tidak pernah dikirim ke browser atau disimpan di git.
 - Model gratis OpenCode tidak dipakai: dokumentasinya membatasi model itu untuk dipakai dari OpenCode. Penyedia dan model **belum dipilih**; pilih yang mengizinkan pemanggilan dari aplikasi sendiri dan yang kebijakan datanya bisa diterima, lalu matikan fallback ke penyedia lain.
 - Pengerasan 9router: wajib API key, sandi dashboard diganti, port tidak terbuka ke internet, log permintaan dan Headroom mati.
 

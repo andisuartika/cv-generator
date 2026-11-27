@@ -14,8 +14,8 @@ Baca BLUEPRINT.md sebelum mengerjakan apa pun. Ikuti urutan fase di bagian 10.
 - Fase 5 (template Modern dan Minimal): selesai (dikerjakan sebelum sisa Fase 4 atas persetujuan pengguna).
 - Fase 6 (foto, warna aksen, susunan section, impor/ekspor JSON, HP, landing, privasi): selesai; Lighthouse accessibility 96-100. Belum diuji di HP asli.
 - Tambahan atas permintaan pengguna (di luar scope MVP): 7 template (Banner, Timeline, Compact, Editorial, Bold, Accent, Executive), total 10. Hindari position: relative pada konten template satu kolom karena mengacak urutan teks PDF.
-- Integrasi AI (BLUEPRINT.md bagian 13), tahap 1 (cek CV otomatis tanpa AI): selesai. Tahap 2 menunggu pilihan penyedia dan model di 9router.
-- Fase berikutnya: AI tahap 2, lalu Fase 7 (uji dan deploy).
+- Integrasi AI (BLUEPRINT.md bagian 13): tahap 1 (cek CV otomatis) selesai. Tahap 2 (penilaian AI) sudah dibangun dan diuji dengan gateway tiruan; BELUM diuji dengan model asli karena penyedia dan model belum dipilih.
+- Fase berikutnya: uji tahap 2 dengan model asli (CV fiktif), lalu AI tahap 3 atau Fase 7 (uji dan deploy).
 - Hosting: server sendiri / VPS (diputuskan pengguna, 27 Nov 2026).
 - Keputusan terbuka (bagian 2 BLUEPRINT.md): target pengguna, antarmuka dua bahasa.
 
