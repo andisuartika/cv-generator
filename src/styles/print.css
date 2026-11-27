@@ -15,6 +15,14 @@
   break-inside: avoid;
 }
 
+/* Off-screen but still laid out, so it can be captured as an image. */
+.export-sheet {
+  position: fixed;
+  top: 0;
+  left: -10000px;
+  width: 794px;
+}
+
 @media print {
   body {
     background: #fff;
@@ -34,5 +42,26 @@
     margin: 0;
     box-shadow: none;
     print-color-adjust: exact;
+  }
+
+  /* On the editor page, print only the full-size export copy. */
+  body:has(> .export-sheet) > :not(.export-sheet) {
+    display: none !important;
+  }
+
+  .export-sheet {
+    position: static;
+  }
+
+  /* Block layout without a minimum height avoids a blank trailing page. */
+  .a4-canvas {
+    display: block;
+    min-height: 0;
+  }
+
+  /* Repeat the page padding on every printed page, not only the first and last. */
+  .a4-canvas > * {
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
   }
 }

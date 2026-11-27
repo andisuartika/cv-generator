@@ -12,6 +12,7 @@ import {
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ResumeForm } from "@/components/editor/ResumeForm";
+import { ExportMenu } from "@/components/export/ExportMenu";
 import { PreviewPane } from "@/components/preview/PreviewPane";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -51,6 +52,7 @@ export function Editor() {
   const resume = resumeStore.useResume((s) => s.resume);
   // Only matters on narrow screens; wide screens show both panels.
   const [tab, setTab] = useState<TabKey>("form");
+  const [exportError, setExportError] = useState<string | null>(null);
 
   useEffect(() => {
     void resumeStore.load();
@@ -121,12 +123,14 @@ export function Editor() {
               <RotateCcw aria-hidden="true" />
               <span className="max-sm:sr-only">Kosongkan</span>
             </ConfirmButton>
+            <ExportMenu data={resume} onError={setExportError} />
           </div>
         </div>
       </header>
       <main className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-start">
         <div className="flex flex-col gap-4 p-4 lg:px-8 lg:py-6">
           {loadIssue && <Warning>{LOAD_MESSAGES[loadIssue]}</Warning>}
+          {exportError && <Warning>{exportError}</Warning>}
           {saveFailed && (
             <Warning>
               Perubahan terakhir gagal disimpan, mungkin karena penyimpanan browser penuh. Jangan
