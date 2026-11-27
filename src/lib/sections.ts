@@ -1,5 +1,7 @@
 import { hasText } from "@/lib/format";
-import { SECTION_KEYS, type Resume, type SectionKey } from "@/lib/schema";
+import { isSafePhoto } from "@/lib/image-utils";
+import type { Resume, SectionKey } from "@/lib/schema";
+import { isSectionKey } from "@/lib/section-order";
 
 /** CV section headings. */
 export const SECTION_LABELS: Record<SectionKey, string> = {
@@ -14,10 +16,14 @@ export const SECTION_LABELS: Record<SectionKey, string> = {
 
 const anyText = (...values: (string | undefined)[]) => values.some(hasText);
 
-/** Returns a copy of the data without blank items, bullets, and skills. */
+/** Returns a copy of the data without blank items, bullets, skills, and unsafe photos. */
 export function compactResume(data: Resume): Resume {
   return {
     ...data,
+    basics: {
+      ...data.basics,
+      photo: isSafePhoto(data.basics.photo) ? data.basics.photo : undefined,
+    },
     experience: data.experience
       .map((e) => ({ ...e, bullets: e.bullets.filter(hasText).map((b) => b.trim()) }))
       .filter((e) => anyText(e.company, e.role, e.location, e.start, e.end, ...e.bullets)),
@@ -31,10 +37,6 @@ export function compactResume(data: Resume): Resume {
     certificates: data.certificates.filter((c) => anyText(c.name, c.issuer, c.year)),
     languages: data.languages.filter((l) => anyText(l.name, l.level)),
   };
-}
-
-function isSectionKey(key: string): key is SectionKey {
-  return (SECTION_KEYS as readonly string[]).includes(key);
 }
 
 /**

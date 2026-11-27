@@ -3,6 +3,7 @@
 import { useId, useState } from "react";
 import { useController, useFormContext, useFormState, useWatch } from "react-hook-form";
 import { ArraySection } from "@/components/editor/ArraySection";
+import { PhotoField } from "@/components/editor/PhotoField";
 import { Checkbox } from "@/components/ui/checkbox";
 import { TextArea, TextField } from "@/components/ui/Field";
 import { Label } from "@/components/ui/label";
@@ -30,6 +31,9 @@ export function BasicsForm() {
   const { register, errors } = useResumeForm();
   return (
     <div className={grid}>
+      <div className="sm:col-span-2">
+        <PhotoField />
+      </div>
       <TextField label="Nama lengkap" autoComplete="name" {...register("basics.name")} />
       <TextField label="Jabatan atau profesi" {...register("basics.title")} />
       <TextField
