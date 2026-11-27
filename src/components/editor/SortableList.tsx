@@ -18,8 +18,9 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { GripVertical, Trash2 } from "lucide-react";
 import { useId, type ReactNode } from "react";
-import { ConfirmButton } from "@/components/ui/Button";
+import { ConfirmButton } from "@/components/ui/confirm-button";
 
 type SortableListProps = {
   ids: string[];
@@ -84,23 +85,34 @@ export function SortableItem({ id, name, onRemove, children }: SortableItemProps
     <li
       ref={setNodeRef}
       style={{ transform: CSS.Translate.toString(transform), transition }}
-      className={`flex flex-col gap-3 rounded-lg border border-neutral-300 bg-background p-3 ${
-        isDragging ? "relative z-10 shadow-lg" : ""
+      className={`flex flex-col gap-4 rounded-xl border bg-muted/40 p-3 sm:p-4 ${
+        isDragging ? "relative z-10 bg-card shadow-lg ring-2 ring-ring/40" : ""
       }`}
     >
-      <div className="flex flex-wrap items-center justify-between gap-2">
+      <div className="flex items-center justify-between gap-2">
         <button
           type="button"
           ref={setActivatorNodeRef}
           {...attributes}
           {...listeners}
           aria-label={`Pindahkan ${name}`}
-          className="cursor-grab touch-none rounded-md px-2 py-1 text-sm font-semibold"
+          className="-ml-1 flex cursor-grab touch-none items-center gap-1.5 rounded-md px-1 py-1 text-sm font-semibold outline-none focus-visible:ring-3 focus-visible:ring-ring/50 active:cursor-grabbing"
         >
-          <span aria-hidden="true">⠿ </span>
+          <GripVertical aria-hidden="true" className="size-4 text-muted-foreground" />
           {name}
         </button>
-        <ConfirmButton label="Hapus" confirmLabel={`Ya, hapus ${name}`} onConfirm={onRemove} />
+        <ConfirmButton
+          variant="ghost"
+          size="icon"
+          aria-label={`Hapus ${name}`}
+          className="text-muted-foreground hover:text-destructive"
+          title={`Hapus ${name}?`}
+          description="Isian pada item ini akan dihapus dan tidak bisa dikembalikan."
+          confirmLabel={`Ya, hapus ${name}`}
+          onConfirm={onRemove}
+        >
+          <Trash2 aria-hidden="true" />
+        </ConfirmButton>
       </div>
       {children}
     </li>

@@ -1,8 +1,9 @@
 "use client";
 
+import { Maximize2, Minus, Plus } from "lucide-react";
 import { useDeferredValue, useEffect, useRef, useState } from "react";
 import { A4Canvas } from "@/components/preview/A4Canvas";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/button";
 import {
   A4_HEIGHT,
   A4_WIDTH,
@@ -47,30 +48,41 @@ export function PreviewPane({ data }: { data: Resume }) {
   const pages = getPageCount(contentHeight);
 
   return (
-    <section aria-label="Preview CV" className="flex min-h-0 flex-1 flex-col gap-2">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <p role="status" className="text-sm text-neutral-600 dark:text-neutral-400">
+    <section
+      aria-label="Preview CV"
+      className="flex min-h-0 flex-1 flex-col overflow-hidden bg-muted lg:border-l"
+    >
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b bg-background px-4 py-2">
+        <p role="status" className="text-sm font-medium text-muted-foreground">
           {pages === 1 ? "1 halaman" : `Sekitar ${pages} halaman`}
         </p>
-        <div role="group" aria-label="Zoom preview" className="flex items-center gap-2">
+        <div role="group" aria-label="Zoom preview" className="flex items-center gap-1">
           <Button
+            variant="ghost"
+            size="icon"
             aria-label="Perkecil"
             disabled={scale <= ZOOM_STEPS[0]}
-            className="disabled:opacity-40"
             onClick={() => setZoom(stepZoom(scale, -1))}
           >
-            −
+            <Minus aria-hidden="true" />
           </Button>
           <span className="w-12 text-center text-sm tabular-nums">{Math.round(scale * 100)}%</span>
           <Button
+            variant="ghost"
+            size="icon"
             aria-label="Perbesar"
             disabled={scale >= ZOOM_STEPS[ZOOM_STEPS.length - 1]}
-            className="disabled:opacity-40"
             onClick={() => setZoom(stepZoom(scale, 1))}
           >
-            +
+            <Plus aria-hidden="true" />
           </Button>
-          <Button aria-pressed={zoom === "fit"} onClick={() => setZoom("fit")}>
+          <Button
+            variant="outline"
+            aria-pressed={zoom === "fit"}
+            className="ml-1 aria-pressed:border-primary aria-pressed:bg-secondary aria-pressed:text-secondary-foreground"
+            onClick={() => setZoom("fit")}
+          >
+            <Maximize2 aria-hidden="true" />
             Pas lebar
           </Button>
         </div>
@@ -78,7 +90,7 @@ export function PreviewPane({ data }: { data: Resume }) {
       <div
         ref={viewportRef}
         tabIndex={0}
-        className="min-h-0 flex-1 overflow-auto [scrollbar-gutter:stable] rounded-lg bg-neutral-200 p-3 dark:bg-neutral-800"
+        className="min-h-0 flex-1 overflow-auto p-4 [scrollbar-gutter:stable] lg:p-6"
       >
         {/* The wrapper takes the scaled size, because transform does not affect layout. */}
         <div
@@ -111,7 +123,7 @@ export function PreviewPane({ data }: { data: Resume }) {
         </div>
       </div>
       {pages > 1 && (
-        <p className="text-sm text-neutral-600 dark:text-neutral-400">
+        <p className="border-t bg-background px-4 py-2 text-xs text-muted-foreground">
           Garis batas halaman hanya perkiraan. Posisi potongan saat dicetak bisa berbeda.
         </p>
       )}

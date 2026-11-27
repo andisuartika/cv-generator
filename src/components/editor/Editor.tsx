@@ -1,9 +1,13 @@
 "use client";
 
+import { Eye, FileText, HardDrive, PencilLine, RotateCcw, TriangleAlert } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ResumeForm } from "@/components/editor/ResumeForm";
 import { PreviewPane } from "@/components/preview/PreviewPane";
-import { Button, ConfirmButton } from "@/components/ui/Button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { ConfirmButton } from "@/components/ui/confirm-button";
 import { emptyResume } from "@/lib/defaults";
 import { resumeStore, type LoadIssue } from "@/store/resume-store";
 
@@ -16,12 +20,18 @@ const LOAD_MESSAGES: Record<LoadIssue, string> = {
     "Penyimpanan browser tidak bisa diakses. Perubahan tidak akan tersimpan setelah halaman ditutup.",
 };
 
-const alertClass =
-  "rounded-md border border-amber-600 bg-amber-50 p-3 text-sm text-amber-900 dark:bg-amber-950 dark:text-amber-100";
+function Warning({ children }: { children: string }) {
+  return (
+    <Alert className="border-amber-500/60 bg-amber-50 text-amber-950 dark:bg-amber-950 dark:text-amber-100">
+      <TriangleAlert aria-hidden="true" />
+      <AlertDescription className="text-inherit">{children}</AlertDescription>
+    </Alert>
+  );
+}
 
 const TABS = [
-  { key: "form", label: "Isi" },
-  { key: "preview", label: "Preview" },
+  { key: "form", label: "Isi", icon: PencilLine },
+  { key: "preview", label: "Preview", icon: Eye },
 ] as const;
 
 type TabKey = (typeof TABS)[number]["key"];
@@ -38,7 +48,11 @@ export function Editor() {
   }, []);
 
   if (!ready) {
-    return <p role="status">Memuat data…</p>;
+    return (
+      <p role="status" className="p-8 text-center text-muted-foreground">
+        Memuat data…
+      </p>
+    );
   }
 
   const savingDisabled = loadIssue === "corrupt-locked" || loadIssue === "unavailable";
@@ -50,54 +64,82 @@ export function Editor() {
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      {loadIssue && (
-        <p role="alert" className={alertClass}>
-          {LOAD_MESSAGES[loadIssue]}
-        </p>
-      )}
-      {saveFailed && (
-        <p role="alert" className={alertClass}>
-          Perubahan terakhir gagal disimpan, mungkin karena penyimpanan browser penuh. Jangan tutup
-          halaman ini sebelum masalahnya teratasi.
-        </p>
-      )}
-      {/* Both panels stay mounted, so switching tabs keeps form and zoom state. */}
-      <div
-        role="group"
-        aria-label="Tampilan editor"
-        className="sticky top-0 z-20 flex gap-2 bg-background py-2 lg:hidden"
-      >
-        {TABS.map(({ key, label }) => (
-          <Button
-            key={key}
-            aria-pressed={tab === key}
-            className="flex-1 aria-pressed:bg-foreground aria-pressed:text-background"
-            onClick={() => setTab(key)}
-          >
-            {label}
-          </Button>
-        ))}
-      </div>
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:items-start">
-        <div className={`${tab === "form" ? "flex" : "hidden"} flex-col gap-4 lg:flex`}>
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <p className="text-sm text-neutral-600 dark:text-neutral-400">
-              {savingDisabled
-                ? "Penyimpanan otomatis tidak aktif."
-                : "Data tersimpan di browser ini saja."}
-            </p>
-            <ConfirmButton label="Kosongkan" confirmLabel="Ya, kosongkan CV" onConfirm={clearResume} />
+    <div className="min-h-screen bg-background">
+      <header className="sticky top-0 z-30 border-b bg-background/95 backdrop-blur">
+        <div className="flex h-16 items-center justify-between gap-3 px-4 lg:px-6">
+          <div className="flex min-w-0 items-center gap-3">
+            <Link
+              href="/"
+              aria-label="Beranda"
+              className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground"
+            >
+              <FileText aria-hidden="true" className="size-5" />
+            </Link>
+            <div className="min-w-0">
+              <h1 className="text-base leading-tight font-semibold">Editor CV</h1>
+              <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                <HardDrive aria-hidden="true" className="size-3 shrink-0" />
+                <span className="truncate">
+                  {savingDisabled
+                    ? "Penyimpanan otomatis tidak aktif."
+                    : "Data tersimpan di browser ini saja."}
+                </span>
+              </p>
+            </div>
           </div>
-          {/* getState: the form reads the data once per revision, not on each change. */}
-          <ResumeForm key={revision} initial={resumeStore.useResume.getState().resume} />
+          <ConfirmButton
+            variant="outline"
+            size="lg"
+            title="Kosongkan CV?"
+            description="Semua isian CV akan dihapus dan tidak bisa dikembalikan."
+            confirmLabel="Ya, kosongkan CV"
+            onConfirm={clearResume}
+          >
+            <RotateCcw aria-hidden="true" />
+            Kosongkan
+          </ConfirmButton>
+        </div>
+      </header>
+      <main className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-start">
+        <div className="flex flex-col gap-4 p-4 lg:px-8 lg:py-6">
+          {loadIssue && <Warning>{LOAD_MESSAGES[loadIssue]}</Warning>}
+          {saveFailed && (
+            <Warning>
+              Perubahan terakhir gagal disimpan, mungkin karena penyimpanan browser penuh. Jangan
+              tutup halaman ini sebelum masalahnya teratasi.
+            </Warning>
+          )}
+          {/* Both panels stay mounted, so switching tabs keeps form and zoom state. */}
+          <div
+            role="group"
+            aria-label="Tampilan editor"
+            className="sticky top-18 z-20 grid grid-cols-2 gap-1 rounded-xl border bg-muted p-1 lg:hidden"
+          >
+            {TABS.map(({ key, label, icon: Icon }) => (
+              <Button
+                key={key}
+                variant="ghost"
+                size="lg"
+                aria-pressed={tab === key}
+                className="aria-pressed:bg-primary aria-pressed:text-primary-foreground aria-pressed:shadow-sm aria-pressed:hover:bg-primary"
+                onClick={() => setTab(key)}
+              >
+                <Icon aria-hidden="true" />
+                {label}
+              </Button>
+            ))}
+          </div>
+          <div className={`${tab === "form" ? "block" : "hidden"} mx-auto w-full max-w-2xl lg:block`}>
+            {/* getState: the form reads the data once per revision, not on each change. */}
+            <ResumeForm key={revision} initial={resumeStore.useResume.getState().resume} />
+          </div>
         </div>
         <div
-          className={`${tab === "preview" ? "flex" : "hidden"} h-[calc(100dvh-5rem)] flex-col lg:sticky lg:top-4 lg:flex lg:h-[calc(100dvh-2rem)]`}
+          className={`${tab === "preview" ? "flex" : "hidden"} h-[calc(100dvh-8.5rem)] flex-col lg:sticky lg:top-16 lg:flex lg:h-[calc(100dvh-4rem)]`}
         >
           <PreviewPane data={resume} />
         </div>
-      </div>
+      </main>
     </div>
   );
 }

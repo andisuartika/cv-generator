@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { useController, useFormContext, useFormState, useWatch } from "react-hook-form";
 import { ArraySection } from "@/components/editor/ArraySection";
+import { Checkbox } from "@/components/ui/checkbox";
 import { TextArea, TextField } from "@/components/ui/Field";
+import { Label } from "@/components/ui/label";
 import {
   newCertificate,
   newEducation,
@@ -73,6 +75,29 @@ function BulletsField({ index }: { index: number }) {
   );
 }
 
+function CurrentCheckbox({ index }: { index: number }) {
+  const id = useId();
+  const { control } = useResumeForm();
+  const {
+    field: { name, ref, value, onBlur, onChange },
+  } = useController({ control, name: `experience.${index}.current` });
+  return (
+    <div className="flex items-center gap-2">
+      <Checkbox
+        id={id}
+        name={name}
+        ref={ref}
+        onBlur={onBlur}
+        checked={value}
+        onCheckedChange={(checked) => onChange(checked === true)}
+      />
+      <Label htmlFor={id} className="font-normal">
+        Masih bekerja di sini
+      </Label>
+    </div>
+  );
+}
+
 function ExperienceFields({ index }: { index: number }) {
   const { register, control, errors } = useResumeForm();
   const current = useWatch({ control, name: `experience.${index}.current` });
@@ -101,10 +126,7 @@ function ExperienceFields({ index }: { index: number }) {
           {...register(`experience.${index}.end`)}
         />
       </div>
-      <label className="flex items-center gap-2 text-sm">
-        <input type="checkbox" className="size-4" {...register(`experience.${index}.current`)} />
-        Masih bekerja di sini
-      </label>
+      <CurrentCheckbox index={index} />
       <BulletsField index={index} />
     </>
   );

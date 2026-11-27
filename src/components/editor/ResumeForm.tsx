@@ -1,7 +1,18 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useId, useState, type ComponentType } from "react";
+import {
+  AlignLeft,
+  Award,
+  Briefcase,
+  FolderKanban,
+  GraduationCap,
+  Languages,
+  Sparkles,
+  User,
+  type LucideIcon,
+} from "lucide-react";
+import { useEffect, useState, type ComponentType } from "react";
 import { FormProvider, useForm, type Resolver } from "react-hook-form";
 import {
   BasicsForm,
@@ -13,6 +24,13 @@ import {
   SkillsForm,
   SummaryForm,
 } from "@/components/editor/sections";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Badge } from "@/components/ui/badge";
 import { ResumeFormSchema } from "@/lib/form-schema";
 import type { Resume, SectionKey } from "@/lib/schema";
 import { SECTION_LABELS } from "@/lib/sections";
@@ -20,16 +38,42 @@ import { resumeStore, type ResumeContent } from "@/store/resume-store";
 
 type PanelKey = "basics" | SectionKey;
 
-const PANELS: { key: PanelKey; title: string; Form: ComponentType }[] = [
-  { key: "basics", title: "Data diri", Form: BasicsForm },
-  { key: "summary", title: SECTION_LABELS.summary, Form: SummaryForm },
-  { key: "experience", title: SECTION_LABELS.experience, Form: ExperienceForm },
-  { key: "education", title: SECTION_LABELS.education, Form: EducationForm },
-  { key: "skills", title: SECTION_LABELS.skills, Form: SkillsForm },
-  { key: "projects", title: SECTION_LABELS.projects, Form: ProjectsForm },
-  { key: "certificates", title: SECTION_LABELS.certificates, Form: CertificatesForm },
-  { key: "languages", title: SECTION_LABELS.languages, Form: LanguagesForm },
+type Panel = { key: PanelKey; title: string; icon: LucideIcon; Form: ComponentType };
+
+const DESCRIPTIONS: Record<PanelKey, string> = {
+  basics: "Nama dan kontak agar perekrut mudah menghubungi Anda.",
+  summary: "Dua sampai empat kalimat tentang pengalaman dan keunggulan Anda.",
+  experience: "Mulai dari pekerjaan terbaru. Tulis pencapaian, bukan hanya tugas.",
+  education: "Riwayat pendidikan formal Anda.",
+  skills: "Kelompokkan keahlian yang relevan dengan posisi yang dituju.",
+  projects: "Karya yang menunjukkan kemampuan Anda.",
+  certificates: "Sertifikasi dan pelatihan yang pernah diikuti.",
+  languages: "Bahasa yang Anda kuasai beserta tingkatnya.",
+};
+
+const PANELS: Panel[] = [
+  { key: "basics", title: "Data diri", icon: User, Form: BasicsForm },
+  { key: "summary", title: SECTION_LABELS.summary, icon: AlignLeft, Form: SummaryForm },
+  { key: "experience", title: SECTION_LABELS.experience, icon: Briefcase, Form: ExperienceForm },
+  { key: "education", title: SECTION_LABELS.education, icon: GraduationCap, Form: EducationForm },
+  { key: "skills", title: SECTION_LABELS.skills, icon: Sparkles, Form: SkillsForm },
+  { key: "projects", title: SECTION_LABELS.projects, icon: FolderKanban, Form: ProjectsForm },
+  { key: "certificates", title: SECTION_LABELS.certificates, icon: Award, Form: CertificatesForm },
+  { key: "languages", title: SECTION_LABELS.languages, icon: Languages, Form: LanguagesForm },
 ];
+
+/** Number of entries in a list section. */
+function ItemCount({ panel }: { panel: PanelKey }) {
+  const count = resumeStore.useResume((s) =>
+    panel === "basics" || panel === "summary" ? 0 : s.resume[panel].length,
+  );
+  if (count === 0) return null;
+  return (
+    <Badge variant="secondary" aria-label={`${count} item`}>
+      {count}
+    </Badge>
+  );
+}
 
 // Deep copy: react-hook-form mutates its values in place.
 function toContent(values: Resume): ResumeContent {
@@ -51,8 +95,8 @@ export function ResumeForm({ initial }: { initial: Resume }) {
     resolver: zodResolver(ResumeFormSchema, undefined, { raw: true }) as Resolver<Resume>,
     mode: "onTouched",
   });
-  const [openPanel, setOpenPanel] = useState<PanelKey | null>("basics");
-  const baseId = useId();
+  // An empty string means every panel is closed.
+  const [openPanel, setOpenPanel] = useState<string>("basics");
   const { subscribe, trigger } = form;
 
   useEffect(
@@ -73,34 +117,42 @@ export function ResumeForm({ initial }: { initial: Resume }) {
 
   return (
     <FormProvider {...form}>
-      <form noValidate onSubmit={(e) => e.preventDefault()} className="flex flex-col gap-2">
-        {PANELS.map(({ key, title, Form }) => {
-          const open = openPanel === key;
-          const buttonId = `${baseId}-${key}-button`;
-          const panelId = `${baseId}-${key}-panel`;
-          return (
-            <div key={key} className="rounded-lg border border-neutral-300">
-              <h2>
-                <button
-                  type="button"
-                  id={buttonId}
-                  aria-expanded={open}
-                  aria-controls={open ? panelId : undefined}
-                  onClick={() => setOpenPanel(open ? null : key)}
-                  className="flex w-full items-center justify-between gap-2 px-4 py-3 text-left font-semibold"
-                >
-                  {title}
-                  <span aria-hidden="true">{open ? "−" : "+"}</span>
-                </button>
-              </h2>
-              {open && (
-                <div id={panelId} role="region" aria-labelledby={buttonId} className="px-4 pb-4">
-                  <Form />
-                </div>
-              )}
-            </div>
-          );
-        })}
+      <form noValidate onSubmit={(e) => e.preventDefault()}>
+        <Accordion
+          type="single"
+          collapsible
+          value={openPanel}
+          onValueChange={setOpenPanel}
+          className="gap-3"
+        >
+          {PANELS.map(({ key, title, icon: Icon, Form }) => (
+            <AccordionItem
+              key={key}
+              value={key}
+              className="rounded-2xl border bg-card transition-shadow not-last:border-b data-[state=open]:shadow-md"
+            >
+              <AccordionTrigger className="items-center gap-3 px-4 py-4 hover:no-underline sm:px-5">
+                <span className="flex min-w-0 items-center gap-3.5">
+                  <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                    <Icon aria-hidden="true" className="size-4.5" />
+                  </span>
+                  <span className="flex min-w-0 flex-col gap-0.5">
+                    <span className="flex items-center gap-2 text-base font-semibold">
+                      {title}
+                      <ItemCount panel={key} />
+                    </span>
+                    <span className="text-[0.8rem] font-normal text-muted-foreground">
+                      {DESCRIPTIONS[key]}
+                    </span>
+                  </span>
+                </span>
+              </AccordionTrigger>
+              <AccordionContent className="px-4 pt-1 pb-5 sm:px-5">
+                <Form />
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
       </form>
     </FormProvider>
   );

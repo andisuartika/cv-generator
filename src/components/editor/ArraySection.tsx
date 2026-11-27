@@ -1,9 +1,10 @@
 "use client";
 
+import { Plus } from "lucide-react";
 import type { ReactNode } from "react";
 import { useFieldArray, useFormContext, type FieldArray } from "react-hook-form";
 import { SortableItem, SortableList } from "@/components/editor/SortableList";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/button";
 import type { Resume } from "@/lib/schema";
 
 export type ArrayName =
@@ -41,7 +42,13 @@ export function ArraySection<N extends ArrayName>(props: ArraySectionProps<N>) {
           </SortableItem>
         ))}
       </SortableList>
-      <Button className="self-start" onClick={() => append(createItem())}>
+      <Button
+        variant="ghost"
+        size="lg"
+        className="h-11 w-full justify-start text-primary hover:bg-primary/5 hover:text-primary"
+        onClick={() => append(createItem())}
+      >
+        <Plus aria-hidden="true" />
         Tambah {itemLabel.toLowerCase()}
       </Button>
     </div>
