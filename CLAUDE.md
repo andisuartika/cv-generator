@@ -8,7 +8,9 @@ Baca BLUEPRINT.md sebelum mengerjakan apa pun. Ikuti urutan fase di bagian 10.
 
 - Fase 0 (setup): selesai.
 - Fase 1 (A4Canvas + template Classic): selesai.
-- Fase berikutnya: Fase 2 (form editor, store Zustand + autosave).
+- Fase 2 (form editor, store Zustand + autosave): selesai.
+- Fase 3: sebagian. Preview dua panel, zoom, dan registry.ts selesai; galeri dan ganti template belum.
+- Fase 4: sebagian. Export PNG/JPG dan "Cetak / Simpan PDF" selesai; route PDF di server menunggu keputusan hosting.
 - Keputusan terbuka (bagian 2 BLUEPRINT.md): target pengguna, hosting, antarmuka dua bahasa.
 
 Perbarui daftar ini di akhir setiap fase.
