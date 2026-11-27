@@ -1,5 +1,6 @@
 import type { ComponentType } from "react";
 import type { Resume } from "@/lib/schema";
+import { AccentTemplate } from "@/templates/accent";
 import { BannerTemplate } from "@/templates/banner";
 import { BoldTemplate } from "@/templates/bold";
 import { ClassicTemplate } from "@/templates/classic";
@@ -44,6 +45,7 @@ export const templates: TemplateDef[] = [
   define("compact", "Compact", CompactTemplate),
   define("editorial", "Editorial", EditorialTemplate),
   define("bold", "Bold", BoldTemplate, { photo: true, sidebar: true }),
+  define("accent", "Accent", AccentTemplate, { photo: true }),
 ];
 
 export function getTemplate(id: string): TemplateDef | undefined {
