@@ -19,7 +19,7 @@ export function compactResume(data: Resume): Resume {
   return {
     ...data,
     experience: data.experience
-      .map((e) => ({ ...e, bullets: e.bullets.filter(hasText) }))
+      .map((e) => ({ ...e, bullets: e.bullets.filter(hasText).map((b) => b.trim()) }))
       .filter((e) => anyText(e.company, e.role, e.location, e.start, e.end, ...e.bullets)),
     education: data.education.filter((e) =>
       anyText(e.school, e.degree, e.start, e.end, e.description),
