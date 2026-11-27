@@ -1,5 +1,6 @@
 import type { ComponentType } from "react";
 import type { Resume } from "@/lib/schema";
+import { BannerTemplate } from "@/templates/banner";
 import { ClassicTemplate } from "@/templates/classic";
 import { MinimalTemplate } from "@/templates/minimal";
 import { ModernTemplate } from "@/templates/modern";
@@ -34,6 +35,7 @@ export const templates: TemplateDef[] = [
   define("classic", "Classic", ClassicTemplate, { photo: true }),
   define("modern", "Modern", ModernTemplate, { photo: true, sidebar: true }),
   define("minimal", "Minimal", MinimalTemplate),
+  define("banner", "Banner", BannerTemplate, { photo: true }),
 ];
 
 export function getTemplate(id: string): TemplateDef | undefined {
