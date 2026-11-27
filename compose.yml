@@ -1,0 +1,24 @@
+# Self-hosted deployment. Public access goes through a reverse proxy or tunnel.
+services:
+  app:
+    build: .
+    image: cv-generator
+    container_name: cv-generator
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${APP_PORT:-8102}:3000" # local only
+    env_file:
+      - path: .env # optional AI settings; see .env.example
+        required: false
+    # Limits keep this app from starving other services on a shared server.
+    mem_limit: 1g
+    cpus: 2
+    pids_limit: 512
+    shm_size: 256mb
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"

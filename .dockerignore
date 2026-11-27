@@ -1,0 +1,10 @@
+.git
+.next
+node_modules
+tests
+*.log
+*.tsbuildinfo
+.DS_Store
+# Secrets must never enter the image.
+.env
+.env.*
