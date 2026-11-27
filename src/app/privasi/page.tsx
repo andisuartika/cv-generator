@@ -19,7 +19,7 @@ const SECTIONS: { title: string; points: string[] }[] = [
     title: "Yang tidak dilakukan",
     points: [
       "Isi CV tidak disimpan di server aplikasi dan tidak ditulis ke log aplikasi.",
-      "Tidak ada akun, iklan, analitik, atau pelacak pihak ketiga.",
+      "Aplikasi tidak memakai akun, iklan, analitik, atau skrip pelacak pihak ketiga.",
       "Aplikasi tidak meminta NIK, nomor kartu keluarga, atau data keluarga.",
     ],
   },
@@ -54,7 +54,8 @@ const SECTIONS: { title: string; points: string[] }[] = [
     title: "Server",
     points: [
       "Server mengirimkan halaman aplikasi dan, jika Anda memintanya, membuat PDF. Isi CV hanya sampai ke server lewat Unduh PDF atau Penilaian AI.",
-      "Alamat IP dipakai sementara di memori untuk membatasi jumlah permintaan PDF. Server dapat mencatat data akses standar, seperti alamat IP dan waktu kunjungan.",
+      "Aplikasi diakses lewat jaringan Cloudflare. Semua permintaan, termasuk isi CV saat Anda memilih Unduh PDF atau Penilaian AI, melewati Cloudflare, yang membuka enkripsinya sebelum meneruskannya ke server aplikasi. Cloudflare dapat mencatat data akses seperti alamat IP, dan kebijakan privasinya berlaku.",
+      "Alamat IP dipakai sementara di memori untuk membatasi jumlah permintaan PDF dan penilaian AI. Server dapat mencatat data akses standar, seperti alamat IP dan waktu kunjungan.",
     ],
   },
 ];
