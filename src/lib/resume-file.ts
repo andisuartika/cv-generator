@@ -21,8 +21,8 @@ function withUniqueIds<T extends { id: string }>(items: T[]): T[] {
   });
 }
 
-/** A file comes from outside the app, so unsafe or inconsistent values are replaced. */
-function sanitize(resume: Resume): Resume {
+/** For data from outside the app: unsafe or inconsistent values are replaced. */
+export function sanitizeResume(resume: Resume): Resume {
   const { theme, basics } = resume;
   return {
     ...resume,
@@ -57,5 +57,5 @@ export function parseResumeFile(text: string): ParseResult {
       message: "File ini bukan cadangan CV dari aplikasi ini, atau isinya rusak. CV Anda tidak diubah.",
     };
   }
-  return { ok: true, resume: sanitize(parsed.data) };
+  return { ok: true, resume: sanitizeResume(parsed.data) };
 }
