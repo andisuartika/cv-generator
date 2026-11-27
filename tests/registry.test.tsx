@@ -23,7 +23,12 @@ describe("template registry", () => {
   it("punya id unik dan memuat template bawaan data", () => {
     const ids = templates.map((t) => t.id);
     expect(new Set(ids).size).toBe(ids.length);
-    expect(ids.slice(0, 3)).toEqual(["classic", "modern", "minimal"]);
+    expect(ids).toEqual([
+      "classic", "modern", "minimal", "banner", "timeline",
+      "compact", "editorial", "bold", "accent", "executive",
+    ]);
+    expect(new Set(templates.map((t) => t.thumbnail)).size).toBe(10);
+    expect(new Set(templates.map((t) => t.component)).size).toBe(10);
     expect(getTemplate(emptyResume.templateId)).toBeDefined();
     expect(getTemplate("tidak-ada")).toBeUndefined();
   });
