@@ -1,4 +1,5 @@
 import { toJpeg, toPng } from "html-to-image";
+import { downloadUrl } from "@/lib/export/download";
 
 export type ImageFormat = "png" | "jpg";
 
@@ -15,8 +16,5 @@ export async function downloadImage(node: HTMLElement, format: ImageFormat, file
     style: { boxShadow: "none", margin: "0" },
   });
 
-  const link = document.createElement("a");
-  link.href = dataUrl;
-  link.download = `${fileName}.${format}`;
-  link.click();
+  downloadUrl(dataUrl, `${fileName}.${format}`);
 }

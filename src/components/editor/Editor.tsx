@@ -12,6 +12,7 @@ import {
 import Link from "next/link";
 import { Suspense, useEffect, useState } from "react";
 import { AccentPicker } from "@/components/editor/AccentPicker";
+import { BackupControls } from "@/components/editor/BackupControls";
 import { ResumeForm } from "@/components/editor/ResumeForm";
 import { SectionManager } from "@/components/editor/SectionManager";
 import { TemplateFromUrl } from "@/components/editor/TemplateFromUrl";
@@ -57,6 +58,7 @@ export function Editor() {
   // Only matters on narrow screens; wide screens show both panels.
   const [tab, setTab] = useState<TabKey>("form");
   const [exportError, setExportError] = useState<string | null>(null);
+  const [importError, setImportError] = useState<string | null>(null);
 
   useEffect(() => {
     void resumeStore.load();
@@ -94,17 +96,7 @@ export function Editor() {
             >
               <FileText aria-hidden="true" className="size-5" />
             </Link>
-            <div className="min-w-0">
-              <h1 className="text-base leading-tight font-semibold">Editor CV</h1>
-              <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                <HardDrive aria-hidden="true" className="size-3 shrink-0" />
-                <span className="truncate">
-                  {savingDisabled
-                    ? "Penyimpanan otomatis tidak aktif."
-                    : "Data tersimpan di browser ini saja."}
-                </span>
-              </p>
-            </div>
+            <h1 className="truncate text-base font-semibold">Editor CV</h1>
           </div>
           {/* Labels are visually hidden on very narrow screens to leave room for the title. */}
           <div className="flex shrink-0 gap-2">
@@ -138,6 +130,7 @@ export function Editor() {
         <div className="flex flex-col gap-4 p-4 lg:px-8 lg:py-6">
           {loadIssue && <Warning>{LOAD_MESSAGES[loadIssue]}</Warning>}
           {exportError && <Warning>{exportError}</Warning>}
+          {importError && <Warning>{importError}</Warning>}
           {saveFailed && (
             <Warning>
               Perubahan terakhir gagal disimpan, mungkin karena penyimpanan browser penuh. Jangan
@@ -167,8 +160,23 @@ export function Editor() {
           <div
             className={`${tab === "form" ? "flex" : "hidden"} mx-auto w-full max-w-2xl flex-col gap-4 lg:flex`}
           >
-            <div className="flex justify-end">
-              <SectionManager />
+            <div className="flex flex-col gap-3 rounded-2xl border bg-muted p-4">
+              <p className="flex items-start gap-2 text-sm">
+                <HardDrive aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-primary" />
+                <span>
+                  {savingDisabled
+                    ? "Penyimpanan otomatis tidak aktif."
+                    : "Data tersimpan di browser ini saja."}{" "}
+                  Ekspor JSON untuk cadangan.{" "}
+                  <Link href="/privasi" className="underline underline-offset-2">
+                    Kebijakan privasi
+                  </Link>
+                </span>
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <BackupControls onError={setImportError} />
+                <SectionManager />
+              </div>
             </div>
             {/* getState: the form reads the data once per revision, not on each change. */}
             <ResumeForm key={revision} initial={resumeStore.useResume.getState().resume} />
