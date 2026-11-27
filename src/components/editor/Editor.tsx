@@ -10,8 +10,10 @@ import {
   WandSparkles,
 } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { ResumeForm } from "@/components/editor/ResumeForm";
+import { TemplateFromUrl } from "@/components/editor/TemplateFromUrl";
+import { TemplatePicker } from "@/components/editor/TemplatePicker";
 import { ExportMenu } from "@/components/export/ExportMenu";
 import { PreviewPane } from "@/components/preview/PreviewPane";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -77,6 +79,9 @@ export function Editor() {
 
   return (
     <div className="min-h-screen bg-background">
+      <Suspense fallback={null}>
+        <TemplateFromUrl />
+      </Suspense>
       <header className="sticky top-0 z-30 border-b bg-background/95 backdrop-blur">
         <div className="flex h-16 items-center justify-between gap-3 px-4 lg:px-6">
           <div className="flex min-w-0 items-center gap-3">
@@ -165,7 +170,15 @@ export function Editor() {
         <div
           className={`${tab === "preview" ? "flex" : "hidden"} h-[calc(100dvh-8.5rem)] flex-col lg:sticky lg:top-16 lg:flex lg:h-[calc(100dvh-4rem)]`}
         >
-          <PreviewPane data={resume} />
+          <PreviewPane
+            data={resume}
+            toolbar={
+              <TemplatePicker
+                value={resume.templateId}
+                onChange={resumeStore.useResume.getState().selectTemplate}
+              />
+            }
+          />
         </div>
       </main>
     </div>

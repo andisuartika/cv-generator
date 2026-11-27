@@ -73,6 +73,17 @@ describe("resume store", () => {
     expect(second.store.useResume.getState().resume.basics.name).toBe("Nama Baru");
   });
 
+  it("mengganti template tanpa mengubah isi CV", async () => {
+    const { storage, store } = setup();
+    await store.load();
+    const before = store.useResume.getState();
+    before.selectTemplate("lain");
+    await tick();
+    expect(store.useResume.getState().resume).toEqual({ ...before.resume, templateId: "lain" });
+    expect(store.useResume.getState().revision).toBe(before.revision);
+    expect(stored(storage).templateId).toBe("lain");
+  });
+
   it("tidak menimpa data tersimpan sebelum selesai dimuat", async () => {
     const { storage, store } = setup();
     storage.setItem(STORAGE_KEY, JSON.stringify(emptyResume));

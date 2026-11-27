@@ -22,6 +22,8 @@ type ResumeState = {
   revision: number;
   updateContent: (content: ResumeContent) => void;
   replaceResume: (resume: Resume) => void;
+  /** Changes the layout only; the content stays as it is. */
+  selectTemplate: (templateId: string) => void;
 };
 
 // Kept outside the persisted store: updating it must not trigger another save.
@@ -79,6 +81,7 @@ export function createResumeStore(adapter: ResumeStorage) {
         revision: 0,
         updateContent: (content) => set((s) => ({ resume: { ...s.resume, ...content } })),
         replaceResume: (resume) => set((s) => ({ resume, revision: s.revision + 1 })),
+        selectTemplate: (templateId) => set((s) => ({ resume: { ...s.resume, templateId } })),
       }),
       {
         name: "resume", // unused: the adapter owns the storage key

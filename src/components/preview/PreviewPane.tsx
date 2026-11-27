@@ -1,7 +1,7 @@
 "use client";
 
 import { Maximize2, Minus, Plus } from "lucide-react";
-import { useDeferredValue, useEffect, useRef, useState } from "react";
+import { useDeferredValue, useEffect, useRef, useState, type ReactNode } from "react";
 import { A4Canvas } from "@/components/preview/A4Canvas";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,7 +15,13 @@ import {
 import type { Resume } from "@/lib/schema";
 import { getTemplate, templates } from "@/templates/registry";
 
-export function PreviewPane({ data }: { data: Resume }) {
+type PreviewPaneProps = {
+  data: Resume;
+  /** Extra controls shown at the start of the toolbar. */
+  toolbar?: ReactNode;
+};
+
+export function PreviewPane({ data, toolbar }: PreviewPaneProps) {
   // Lets typing stay responsive while the preview catches up.
   const deferred = useDeferredValue(data);
   const Template = (getTemplate(deferred.templateId) ?? templates[0]).component;
@@ -53,9 +59,12 @@ export function PreviewPane({ data }: { data: Resume }) {
       className="flex min-h-0 flex-1 flex-col overflow-hidden bg-muted lg:border-l"
     >
       <div className="flex flex-wrap items-center justify-between gap-2 border-b bg-background px-4 py-2">
-        <p role="status" className="text-sm font-medium text-muted-foreground">
-          {pages === 1 ? "1 halaman" : `Sekitar ${pages} halaman`}
-        </p>
+        <div className="flex items-center gap-3">
+          {toolbar}
+          <p role="status" className="text-sm font-medium text-muted-foreground">
+            {pages === 1 ? "1 halaman" : `Sekitar ${pages} halaman`}
+          </p>
+        </div>
         <div role="group" aria-label="Zoom preview" className="flex items-center gap-1">
           <Button
             variant="ghost"
