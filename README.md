@@ -29,6 +29,24 @@ Salin `.env.example` ke `.env.local`, lalu isi `AI_BASE_URL`, `AI_API_KEY`, `AI_
 - Atur timeout reverse proxy minimal 200 detik.
 - Jangan mencatat isi request di reverse proxy maupun gateway.
 
+## Deploy (server sendiri, Docker)
+
+Produksi: https://buatcv.ptandi.tech, lewat Cloudflare Tunnel ke `http://localhost:8102`.
+
+```bash
+git clone https://github.com/andisuartika/cv-generator.git && cd cv-generator
+docker compose up -d --build   # port hanya terbuka di 127.0.0.1:8102
+```
+
+- **Perbarui:** `git pull && docker compose up -d --build`
+- **Hentikan:** `docker compose down`
+- **Log:** `docker compose logs -f app`
+- Image sudah memuat Chromium dan font untuk PDF, jadi langkah pemasangan di bawah hanya perlu tanpa Docker.
+- Port bisa diganti dengan `APP_PORT`. File `.env` hanya diperlukan untuk Penilaian AI.
+- Penilaian AI dengan 9router di Docker pada mesin yang sama: isi `.env`, set `AI_BASE_URL=http://9router:20128/v1`, lalu jalankan `docker compose -f compose.yml -f compose.ai.yml up -d`. Jaringan itu juga membuat aplikasi bisa menjangkau container lain yang tersambung ke sana.
+- Cloudflare memutus permintaan yang terlalu lama (sekitar 100 detik). Sesuaikan batas tunggu AI sebelum mengaktifkannya lewat Cloudflare.
+- Di dashboard Cloudflare, jangan aktifkan penyisipan skrip analitik: halaman privasi menyatakan aplikasi tidak memakainya.
+
 ## PDF di server
 
 Tombol **Unduh PDF** memakai Chromium di server (Playwright). Pasang sekali di mesin yang menjalankan aplikasi:

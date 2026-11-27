@@ -16,7 +16,7 @@ Baca BLUEPRINT.md sebelum mengerjakan apa pun. Ikuti urutan fase di bagian 10.
 - Tambahan atas permintaan pengguna (di luar scope MVP): 7 template (Banner, Timeline, Compact, Editorial, Bold, Accent, Executive), total 10. Hindari position: relative pada konten template satu kolom karena mengacak urutan teks PDF.
 - Integrasi AI (BLUEPRINT.md bagian 13): tahap 1 (cek CV otomatis) selesai. Tahap 2 (penilaian AI) sudah dibangun dan diuji dengan gateway tiruan; BELUM diuji dengan model asli karena penyedia dan model belum dipilih.
 - Fase berikutnya: uji tahap 2 dengan model asli (CV fiktif), lalu AI tahap 3 atau Fase 7 (uji dan deploy).
-- Hosting: server sendiri / VPS (diputuskan pengguna, 27 Nov 2026).
+- Hosting: server sendiri / VPS (diputuskan pengguna, 27 Nov 2026). Deploy: Docker di home server (`ssh andi-server`, perlu login Cloudflare Access), port 127.0.0.1:8102, domain buatcv.ptandi.tech lewat Cloudflare Tunnel yang diatur dari dashboard. Server menjalankan layanan produksi lain: jangan ubah atau restart layanan lain.
 - Keputusan terbuka (bagian 2 BLUEPRINT.md): target pengguna, antarmuka dua bahasa.
 
 Perbarui daftar ini di akhir setiap fase.
