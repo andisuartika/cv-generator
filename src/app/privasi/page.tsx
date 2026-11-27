@@ -18,7 +18,7 @@ const SECTIONS: { title: string; points: string[] }[] = [
   {
     title: "Yang tidak dilakukan",
     points: [
-      "Isi CV tidak disimpan di server dan tidak ditulis ke log aplikasi.",
+      "Isi CV tidak disimpan di server aplikasi dan tidak ditulis ke log aplikasi.",
       "Tidak ada akun, iklan, analitik, atau pelacak pihak ketiga.",
       "Aplikasi tidak meminta NIK, nomor kartu keluarga, atau data keluarga.",
     ],
@@ -34,6 +34,15 @@ const SECTIONS: { title: string; points: string[] }[] = [
     ],
   },
   {
+    title: "Penilaian AI",
+    points: [
+      "Fitur ini hanya muncul jika diaktifkan pengelola aplikasi, dan hanya berjalan setelah Anda menyetujuinya setiap kali.",
+      "Teks CV dikirim lewat server aplikasi ke layanan AI yang namanya ditampilkan sebelum Anda mengirim. Kebijakan data layanan itu berlaku untuk teks yang dikirim.",
+      "Foto, nama, email, telepon, alamat, dan tautan dihapus sebelum dikirim. Nama perusahaan dan sekolah tetap dikirim. Data pribadi yang tertulis di dalam kalimat mungkin tidak terdeteksi, jadi periksa data yang akan dikirim.",
+      "Server aplikasi tidak menyimpan teks CV maupun hasil penilaian.",
+    ],
+  },
+  {
     title: "Menghapus data",
     points: [
       "Tombol Kosongkan menghapus isi CV yang sedang dipakai, tetapi tidak menghapus salinan cadangan data rusak.",
@@ -44,7 +53,7 @@ const SECTIONS: { title: string; points: string[] }[] = [
   {
     title: "Server",
     points: [
-      "Server mengirimkan halaman aplikasi dan, jika Anda memintanya, membuat PDF. Isi CV hanya sampai ke server lewat Unduh PDF.",
+      "Server mengirimkan halaman aplikasi dan, jika Anda memintanya, membuat PDF. Isi CV hanya sampai ke server lewat Unduh PDF atau Penilaian AI.",
       "Alamat IP dipakai sementara di memori untuk membatasi jumlah permintaan PDF. Server dapat mencatat data akses standar, seperti alamat IP dan waktu kunjungan.",
     ],
   },

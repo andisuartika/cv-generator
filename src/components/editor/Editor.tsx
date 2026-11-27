@@ -12,6 +12,7 @@ import {
 import Link from "next/link";
 import { Suspense, useEffect, useState } from "react";
 import { AccentPicker } from "@/components/editor/AccentPicker";
+import { AiReview } from "@/components/editor/AiReview";
 import { BackupControls } from "@/components/editor/BackupControls";
 import { CvCheck } from "@/components/editor/CvCheck";
 import { ResumeForm } from "@/components/editor/ResumeForm";
@@ -192,6 +193,7 @@ export function Editor() {
               </p>
               <div className="flex flex-wrap gap-2">
                 <CvCheck pages={pages} onFix={showPanel} />
+                <AiReview onFix={showPanel} />
                 <BackupControls onError={setImportError} />
                 <SectionManager />
               </div>
