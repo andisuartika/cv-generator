@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { sampleResume } from "@/lib/defaults";
 import { MAX_PDF_REQUEST_BYTES } from "@/lib/pdf/contract";
 import { createPdfHandler } from "@/lib/pdf/handler";
-import { createRateLimiter, createSlots } from "@/lib/pdf/limits";
+import { createRateLimiter, createSlots } from "@/lib/server/limits";
 import type { Resume } from "@/lib/schema";
 
 const pdf = new TextEncoder().encode("%PDF-fake");

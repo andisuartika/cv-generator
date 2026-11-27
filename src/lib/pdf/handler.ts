@@ -1,8 +1,9 @@
 import { getExportFileName } from "@/lib/export/filename";
 import { MAX_PDF_REQUEST_BYTES } from "@/lib/pdf/contract";
-import { createRateLimiter, createSlots } from "@/lib/pdf/limits";
 import { sanitizeResume } from "@/lib/resume-file";
 import { ResumeSchema, type Resume } from "@/lib/schema";
+import { checkJsonRequest, clientKey, failure, readBody } from "@/lib/server/http";
+import { createRateLimiter, createSlots } from "@/lib/server/limits";
 
 type HandlerOptions = {
   render: (resume: Resume) => Promise<Uint8Array>;
@@ -10,41 +11,6 @@ type HandlerOptions = {
   overall?: ReturnType<typeof createRateLimiter>;
   slots?: ReturnType<typeof createSlots>;
 };
-
-function failure(status: number, message: string, headers: Record<string, string> = {}) {
-  return Response.json(
-    { message },
-    { status, headers: { "Cache-Control": "no-store", ...headers } },
-  );
-}
-
-/** Reads the body, giving up as soon as it grows past the limit. */
-async function readBody(request: Request, maxBytes: number): Promise<string | null> {
-  if (Number(request.headers.get("content-length") ?? 0) > maxBytes) return null;
-  if (!request.body) return "";
-  const reader = request.body.getReader();
-  const decoder = new TextDecoder();
-  let size = 0;
-  let text = "";
-  for (;;) {
-    const { done, value } = await reader.read();
-    if (done) return text + decoder.decode();
-    size += value.byteLength;
-    if (size > maxBytes) {
-      await reader.cancel();
-      return null;
-    }
-    text += decoder.decode(value, { stream: true });
-  }
-}
-
-/**
- * The address added by the reverse proxy. Earlier entries come from the client
- * and can be forged, so only the last one is used.
- */
-function clientKey(headers: Headers): string {
-  return headers.get("x-forwarded-for")?.split(",").at(-1)?.trim() || "direct";
-}
 
 function contentDisposition(name: string): string {
   const ascii = name.replace(/[^A-Za-z0-9]+/g, "-");
@@ -59,12 +25,8 @@ export function createPdfHandler({
   slots = createSlots(2),
 }: HandlerOptions) {
   return async function handle(request: Request): Promise<Response> {
-    if (request.headers.get("sec-fetch-site") === "cross-site") {
-      return failure(403, "Permintaan dari situs lain ditolak.");
-    }
-    if (!request.headers.get("content-type")?.startsWith("application/json")) {
-      return failure(415, "Format permintaan harus JSON.");
-    }
+    const rejected = checkJsonRequest(request);
+    if (rejected) return rejected;
     const wait = perClient(clientKey(request.headers)) || overall("all");
     if (wait > 0) {
       return failure(429, "Terlalu banyak permintaan. Coba lagi sebentar lagi.", {
