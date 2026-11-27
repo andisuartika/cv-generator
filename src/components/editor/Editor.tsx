@@ -11,7 +11,9 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Suspense, useEffect, useState } from "react";
+import { AccentPicker } from "@/components/editor/AccentPicker";
 import { ResumeForm } from "@/components/editor/ResumeForm";
+import { SectionManager } from "@/components/editor/SectionManager";
 import { TemplateFromUrl } from "@/components/editor/TemplateFromUrl";
 import { TemplatePicker } from "@/components/editor/TemplatePicker";
 import { ExportMenu } from "@/components/export/ExportMenu";
@@ -162,7 +164,12 @@ export function Editor() {
               </Button>
             ))}
           </div>
-          <div className={`${tab === "form" ? "block" : "hidden"} mx-auto w-full max-w-2xl lg:block`}>
+          <div
+            className={`${tab === "form" ? "flex" : "hidden"} mx-auto w-full max-w-2xl flex-col gap-4 lg:flex`}
+          >
+            <div className="flex justify-end">
+              <SectionManager />
+            </div>
             {/* getState: the form reads the data once per revision, not on each change. */}
             <ResumeForm key={revision} initial={resumeStore.useResume.getState().resume} />
           </div>
@@ -173,10 +180,16 @@ export function Editor() {
           <PreviewPane
             data={resume}
             toolbar={
-              <TemplatePicker
-                value={resume.templateId}
-                onChange={resumeStore.useResume.getState().selectTemplate}
-              />
+              <div className="flex gap-2">
+                <TemplatePicker
+                  value={resume.templateId}
+                  onChange={resumeStore.useResume.getState().selectTemplate}
+                />
+                <AccentPicker
+                  value={resume.theme.accent}
+                  onChange={resumeStore.useResume.getState().setAccent}
+                />
+              </div>
             }
           />
         </div>

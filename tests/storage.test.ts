@@ -84,6 +84,25 @@ describe("resume store", () => {
     expect(stored(storage).templateId).toBe("lain");
   });
 
+  it("menyimpan warna aksen dan susunan section tanpa mengubah isi", async () => {
+    const { storage, store } = setup();
+    await store.load();
+    const { resume, setAccent, setSectionOrder, setSectionHidden } = store.useResume.getState();
+    setAccent("#047857");
+    setSectionOrder(["skills", "summary"]);
+    setSectionHidden("summary", true);
+    setSectionHidden("summary", true);
+    await tick();
+    expect(stored(storage)).toMatchObject({
+      sectionOrder: ["skills", "summary"],
+      hiddenSections: ["summary"],
+      theme: { ...resume.theme, accent: "#047857" },
+    });
+    expect(stored(storage).basics).toEqual(resume.basics);
+    setSectionHidden("summary", false);
+    expect(store.useResume.getState().resume.hiddenSections).toEqual([]);
+  });
+
   it("tidak menimpa data tersimpan sebelum selesai dimuat", async () => {
     const { storage, store } = setup();
     storage.setItem(STORAGE_KEY, JSON.stringify(emptyResume));

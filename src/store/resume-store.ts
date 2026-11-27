@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist, type PersistStorage } from "zustand/middleware";
 import { sampleResume } from "@/lib/defaults";
-import type { Resume } from "@/lib/schema";
+import type { Resume, SectionKey } from "@/lib/schema";
 import { CorruptDataError, type ResumeStorage } from "@/lib/storage/adapter";
 import { LocalStorageAdapter } from "@/lib/storage/local";
 
@@ -24,6 +24,9 @@ type ResumeState = {
   replaceResume: (resume: Resume) => void;
   /** Changes the layout only; the content stays as it is. */
   selectTemplate: (templateId: string) => void;
+  setAccent: (accent: string) => void;
+  setSectionOrder: (sectionOrder: string[]) => void;
+  setSectionHidden: (section: SectionKey, hidden: boolean) => void;
 };
 
 // Kept outside the persisted store: updating it must not trigger another save.
@@ -82,6 +85,15 @@ export function createResumeStore(adapter: ResumeStorage) {
         updateContent: (content) => set((s) => ({ resume: { ...s.resume, ...content } })),
         replaceResume: (resume) => set((s) => ({ resume, revision: s.revision + 1 })),
         selectTemplate: (templateId) => set((s) => ({ resume: { ...s.resume, templateId } })),
+        setAccent: (accent) =>
+          set((s) => ({ resume: { ...s.resume, theme: { ...s.resume.theme, accent } } })),
+        setSectionOrder: (sectionOrder) => set((s) => ({ resume: { ...s.resume, sectionOrder } })),
+        setSectionHidden: (section, hidden) =>
+          set((s) => {
+            const others = s.resume.hiddenSections.filter((key) => key !== section);
+            const hiddenSections = hidden ? [...others, section] : others;
+            return { resume: { ...s.resume, hiddenSections } };
+          }),
       }),
       {
         name: "resume", // unused: the adapter owns the storage key
