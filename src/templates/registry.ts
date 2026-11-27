@@ -4,6 +4,7 @@ import { BannerTemplate } from "@/templates/banner";
 import { ClassicTemplate } from "@/templates/classic";
 import { MinimalTemplate } from "@/templates/minimal";
 import { ModernTemplate } from "@/templates/modern";
+import { TimelineTemplate } from "@/templates/timeline";
 
 export type TemplateDef = {
   id: string;
@@ -36,6 +37,7 @@ export const templates: TemplateDef[] = [
   define("modern", "Modern", ModernTemplate, { photo: true, sidebar: true }),
   define("minimal", "Minimal", MinimalTemplate),
   define("banner", "Banner", BannerTemplate, { photo: true }),
+  define("timeline", "Timeline", TimelineTemplate, { photo: true }),
 ];
 
 export function getTemplate(id: string): TemplateDef | undefined {
