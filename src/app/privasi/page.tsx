@@ -18,7 +18,7 @@ const SECTIONS: { title: string; points: string[] }[] = [
   {
     title: "Yang tidak dilakukan",
     points: [
-      "Isi CV tidak dikirim ke server aplikasi dan tidak disimpan di sana.",
+      "Isi CV tidak disimpan di server dan tidak ditulis ke log aplikasi.",
       "Tidak ada akun, iklan, analitik, atau pelacak pihak ketiga.",
       "Aplikasi tidak meminta NIK, nomor kartu keluarga, atau data keluarga.",
     ],
@@ -28,7 +28,8 @@ const SECTIONS: { title: string; points: string[] }[] = [
     points: [
       "Foto dipotong dan dikompres di browser. Foto tidak diunggah.",
       "Gambar PNG dan JPG serta cadangan JSON dibuat di browser.",
-      "PDF dibuat lewat dialog cetak browser Anda.",
+      "Unduh PDF mengirim isi CV, termasuk foto, ke server aplikasi. Server membuat PDF di memori, mengirimkannya kembali, lalu membuangnya.",
+      "Cetak / Simpan PDF dibuat lewat dialog cetak browser, tanpa mengirim CV ke server.",
       "File yang Anda unduh berisi data pribadi. Simpan dan bagikan dengan hati-hati.",
     ],
   },
@@ -43,7 +44,8 @@ const SECTIONS: { title: string; points: string[] }[] = [
   {
     title: "Server",
     points: [
-      "Server hanya mengirimkan halaman aplikasi. Penyedia hosting dapat mencatat data akses standar, seperti alamat IP dan waktu kunjungan.",
+      "Server mengirimkan halaman aplikasi dan, jika Anda memintanya, membuat PDF. Isi CV hanya sampai ke server lewat Unduh PDF.",
+      "Alamat IP dipakai sementara di memori untuk membatasi jumlah permintaan PDF. Server dapat mencatat data akses standar, seperti alamat IP dan waktu kunjungan.",
     ],
   },
 ];
@@ -58,7 +60,7 @@ export default function PrivacyPage() {
       <header className="flex flex-col gap-2">
         <h1 className="text-3xl font-bold tracking-tight">Kebijakan Privasi</h1>
         <p className="text-muted-foreground">
-          Ringkasnya: CV Anda tetap berada di browser Anda.
+          Ringkasnya: CV Anda disimpan di browser Anda saja.
         </p>
       </header>
       {SECTIONS.map((section) => (
