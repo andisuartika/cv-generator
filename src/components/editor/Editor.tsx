@@ -13,6 +13,7 @@ import Link from "next/link";
 import { Suspense, useEffect, useState } from "react";
 import { AccentPicker } from "@/components/editor/AccentPicker";
 import { BackupControls } from "@/components/editor/BackupControls";
+import { CvCheck } from "@/components/editor/CvCheck";
 import { ResumeForm } from "@/components/editor/ResumeForm";
 import { SectionManager } from "@/components/editor/SectionManager";
 import { TemplateFromUrl } from "@/components/editor/TemplateFromUrl";
@@ -23,6 +24,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { ConfirmButton } from "@/components/ui/confirm-button";
 import { emptyResume, sampleResume } from "@/lib/defaults";
+import type { CheckTarget } from "@/lib/cv-check";
 import type { Resume } from "@/lib/schema";
 import { resumeStore, type LoadIssue } from "@/store/resume-store";
 
@@ -59,6 +61,8 @@ export function Editor() {
   const [tab, setTab] = useState<TabKey>("form");
   const [exportError, setExportError] = useState<string | null>(null);
   const [importError, setImportError] = useState<string | null>(null);
+  const [openPanel, setOpenPanel] = useState("basics");
+  const [pages, setPages] = useState<number>();
 
   useEffect(() => {
     void resumeStore.load();
@@ -79,6 +83,19 @@ export function Editor() {
     const { resume, replaceResume } = resumeStore.useResume.getState();
     const { templateId, theme } = resume;
     replaceResume(structuredClone({ ...source, templateId, theme }));
+  }
+
+  /** Opens the panel of a finding and moves focus to it. */
+  function showPanel(panel: CheckTarget) {
+    setTab("form");
+    setOpenPanel(panel);
+    // Waits until the accordion and the mobile tab have been updated.
+    setTimeout(() => {
+      const item = document.querySelector<HTMLElement>(`[data-panel="${panel}"]`);
+      item?.querySelector("button")?.focus({ preventScroll: true });
+      // The panel, not the button, carries the margin that clears the sticky bars.
+      item?.scrollIntoView({ block: "start" });
+    }, 250);
   }
 
   return (
@@ -122,7 +139,7 @@ export function Editor() {
               <RotateCcw aria-hidden="true" />
               <span className="max-sm:sr-only">Kosongkan</span>
             </ConfirmButton>
-            <ExportMenu data={resume} onError={setExportError} />
+            <ExportMenu data={resume} onError={setExportError} onPageCount={setPages} />
           </div>
         </div>
       </header>
@@ -174,12 +191,18 @@ export function Editor() {
                 </span>
               </p>
               <div className="flex flex-wrap gap-2">
+                <CvCheck pages={pages} onFix={showPanel} />
                 <BackupControls onError={setImportError} />
                 <SectionManager />
               </div>
             </div>
             {/* getState: the form reads the data once per revision, not on each change. */}
-            <ResumeForm key={revision} initial={resumeStore.useResume.getState().resume} />
+            <ResumeForm
+              key={revision}
+              initial={resumeStore.useResume.getState().resume}
+              openPanel={openPanel}
+              onOpenPanelChange={setOpenPanel}
+            />
           </div>
         </div>
         <div

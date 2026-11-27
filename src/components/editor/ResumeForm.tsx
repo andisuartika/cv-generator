@@ -12,7 +12,7 @@ import {
   User,
   type LucideIcon,
 } from "lucide-react";
-import { useEffect, useState, type ComponentType } from "react";
+import { useEffect, type ComponentType } from "react";
 import { FormProvider, useForm, type Resolver } from "react-hook-form";
 import {
   BasicsForm,
@@ -36,7 +36,7 @@ import type { Resume, SectionKey } from "@/lib/schema";
 import { SECTION_LABELS } from "@/lib/sections";
 import { resumeStore, type ResumeContent } from "@/store/resume-store";
 
-type PanelKey = "basics" | SectionKey;
+export type PanelKey = "basics" | SectionKey;
 
 type Panel = { key: PanelKey; title: string; icon: LucideIcon; Form: ComponentType };
 
@@ -87,7 +87,14 @@ function toContent(values: Resume): ResumeContent {
  * The form owns input state and mirrors every change into the store.
  * `initial` is read once; remount (change the key) to load other data.
  */
-export function ResumeForm({ initial }: { initial: Resume }) {
+type ResumeFormProps = {
+  initial: Resume;
+  /** The open panel; an empty string means every panel is closed. */
+  openPanel: string;
+  onOpenPanelChange: (panel: string) => void;
+};
+
+export function ResumeForm({ initial, openPanel, onOpenPanelChange }: ResumeFormProps) {
   const form = useForm<Resume>({
     defaultValues: structuredClone(initial),
     // The schema's input type makes defaulted fields optional. Form values are
@@ -95,8 +102,6 @@ export function ResumeForm({ initial }: { initial: Resume }) {
     resolver: zodResolver(ResumeFormSchema, undefined, { raw: true }) as Resolver<Resume>,
     mode: "onTouched",
   });
-  // An empty string means every panel is closed.
-  const [openPanel, setOpenPanel] = useState<string>("basics");
   const { subscribe, trigger } = form;
 
   useEffect(
@@ -122,14 +127,15 @@ export function ResumeForm({ initial }: { initial: Resume }) {
           type="single"
           collapsible
           value={openPanel}
-          onValueChange={setOpenPanel}
+          onValueChange={onOpenPanelChange}
           className="gap-3"
         >
           {PANELS.map(({ key, title, icon: Icon, Form }) => (
             <AccordionItem
               key={key}
               value={key}
-              className="rounded-2xl border bg-card transition-shadow not-last:border-b data-[state=open]:shadow-md"
+              data-panel={key}
+              className="scroll-mt-36 rounded-2xl border bg-card transition-shadow lg:scroll-mt-20 not-last:border-b data-[state=open]:shadow-md"
             >
               <AccordionTrigger className="items-center gap-3 px-4 py-4 hover:no-underline sm:px-5">
                 <span className="flex min-w-0 items-center gap-3.5">

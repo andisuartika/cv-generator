@@ -19,9 +19,10 @@ import type { Resume } from "@/lib/schema";
 type ExportMenuProps = {
   data: Resume;
   onError: (message: string | null) => void;
+  onPageCount?: (pages: number) => void;
 };
 
-export function ExportMenu({ data, onError }: ExportMenuProps) {
+export function ExportMenu({ data, onError, onPageCount }: ExportMenuProps) {
   const sheetRef = useRef<HTMLDivElement>(null);
   const [busy, setBusy] = useState(false);
 
@@ -95,7 +96,7 @@ export function ExportMenu({ data, onError }: ExportMenuProps) {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      <ExportSheet ref={sheetRef} data={data} />
+      <ExportSheet ref={sheetRef} data={data} onPageCount={onPageCount} />
     </>
   );
 }
