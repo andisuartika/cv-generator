@@ -28,10 +28,14 @@ export function TemplatePicker({ value, onChange }: TemplatePickerProps) {
           {current.name}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="w-56">
-        <DropdownMenuRadioGroup value={current.id} onValueChange={onChange}>
+      <DropdownMenuContent align="start" className="w-80 max-w-[calc(100vw-2rem)]">
+        <DropdownMenuRadioGroup
+          value={current.id}
+          onValueChange={onChange}
+          className="grid grid-cols-2 gap-1"
+        >
           {templates.map((template) => (
-            <DropdownMenuRadioItem key={template.id} value={template.id} className="gap-3 py-2">
+            <DropdownMenuRadioItem key={template.id} value={template.id} className="gap-2 py-2">
               <Image
                 src={template.thumbnail}
                 alt=""

@@ -46,7 +46,7 @@ export default function Home() {
           </li>
         ))}
       </ul>
-      <section aria-labelledby="templates-heading" className="mx-auto max-w-5xl">
+      <section aria-labelledby="templates-heading" className="mx-auto max-w-6xl">
         <h2 id="templates-heading" className="mb-6 text-center text-xl font-semibold">
           Pilih template
         </h2>
