@@ -3,6 +3,7 @@ import type { Resume } from "@/lib/schema";
 import { BannerTemplate } from "@/templates/banner";
 import { ClassicTemplate } from "@/templates/classic";
 import { CompactTemplate } from "@/templates/compact";
+import { EditorialTemplate } from "@/templates/editorial";
 import { MinimalTemplate } from "@/templates/minimal";
 import { ModernTemplate } from "@/templates/modern";
 import { TimelineTemplate } from "@/templates/timeline";
@@ -40,6 +41,7 @@ export const templates: TemplateDef[] = [
   define("banner", "Banner", BannerTemplate, { photo: true }),
   define("timeline", "Timeline", TimelineTemplate, { photo: true }),
   define("compact", "Compact", CompactTemplate),
+  define("editorial", "Editorial", EditorialTemplate),
 ];
 
 export function getTemplate(id: string): TemplateDef | undefined {
