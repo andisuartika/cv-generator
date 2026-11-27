@@ -13,35 +13,28 @@ export type TemplateDef = {
   supports: { photo: boolean; sidebar: boolean };
 };
 
-const classic: TemplateDef = {
-  id: "classic",
-  name: "Classic",
-  thumbnail: "/thumbnails/classic.svg",
-  component: ClassicTemplate,
-  defaultTheme: { accent: "#2563eb", font: "Inter", fontSize: 10.5 },
-  supports: { photo: true, sidebar: false },
-};
+function define(
+  id: string,
+  name: string,
+  component: TemplateDef["component"],
+  supports: Partial<TemplateDef["supports"]> = {},
+): TemplateDef {
+  return {
+    id,
+    name,
+    component,
+    thumbnail: `/thumbnails/${id}.svg`,
+    defaultTheme: { accent: "#2563eb", font: "Inter", fontSize: 10.5 },
+    supports: { photo: false, sidebar: false, ...supports },
+  };
+}
 
-const modern: TemplateDef = {
-  id: "modern",
-  name: "Modern",
-  thumbnail: "/thumbnails/modern.svg",
-  component: ModernTemplate,
-  defaultTheme: { accent: "#2563eb", font: "Inter", fontSize: 10.5 },
-  supports: { photo: true, sidebar: true },
-};
-
-const minimal: TemplateDef = {
-  id: "minimal",
-  name: "Minimal",
-  thumbnail: "/thumbnails/minimal.svg",
-  component: MinimalTemplate,
-  defaultTheme: { accent: "#2563eb", font: "Inter", fontSize: 10.5 },
-  supports: { photo: false, sidebar: false },
-};
-
-/** All available templates. */
-export const templates: TemplateDef[] = [classic, modern, minimal];
+/** All available templates, in gallery order. */
+export const templates: TemplateDef[] = [
+  define("classic", "Classic", ClassicTemplate, { photo: true }),
+  define("modern", "Modern", ModernTemplate, { photo: true, sidebar: true }),
+  define("minimal", "Minimal", MinimalTemplate),
+];
 
 export function getTemplate(id: string): TemplateDef | undefined {
   return templates.find((t) => t.id === id);

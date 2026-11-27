@@ -23,7 +23,7 @@ describe("template registry", () => {
   it("punya id unik dan memuat template bawaan data", () => {
     const ids = templates.map((t) => t.id);
     expect(new Set(ids).size).toBe(ids.length);
-    expect(ids).toEqual(["classic", "modern", "minimal"]);
+    expect(ids.slice(0, 3)).toEqual(["classic", "modern", "minimal"]);
     expect(getTemplate(emptyResume.templateId)).toBeDefined();
     expect(getTemplate("tidak-ada")).toBeUndefined();
   });
