@@ -26,6 +26,10 @@
     background: none;
   }
 
+  .a4-stage-nav {
+    display: none;
+  }
+
   .a4-canvas {
     margin: 0;
     box-shadow: none;
