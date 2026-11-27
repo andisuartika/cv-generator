@@ -302,3 +302,31 @@ Aturan lengkap untuk AI ada di `CLAUDE.md` di root proyek ini (salin ke file atu
 | Pengguna kehilangan data saat browser dibersihkan | Kehilangan CV | Peringatan di UI, Export JSON yang mudah ditemukan |
 | Route PDF disalahgunakan | Beban server | Batas ukuran request, rate limit, validasi zod |
 | Template menjadi sulit dirawat | Perubahan satu template merusak yang lain | Template terisolasi per folder, uji otomatis untuk semua template di registry |
+
+## 13. Integrasi AI (disepakati 27 Nov 2026, dikerjakan sebelum deploy)
+
+**Tahapan**, dikerjakan berurutan:
+
+| Tahap | Fitur | Memakai AI |
+| --- | --- | --- |
+| 1 | Cek CV otomatis: kelengkapan, format, dan kebiasaan penulisan, dengan aturan kode di browser | Tidak |
+| 2 | Penilaian AI: 3–5 saran terpenting yang menunjuk bagian CV, bukan angka skor | Ya |
+| 3 | Perbaiki kalimat: sebelum dan sesudah, diterapkan hanya jika pengguna setuju | Ya |
+| 4 | Cocokkan CV dengan teks lowongan, setelah tahap 2 dan 3 terbukti bagus | Ya |
+
+**Keputusan teknis:**
+
+- AI diakses lewat 9router di server yang sama: browser → server aplikasi → 9router → penyedia model. Hermes Agent tidak dipakai, karena API-nya memberi akses ke seluruh alat agent, termasuk terminal, padahal teks CV berasal dari pengunjung.
+- Konfigurasi hanya di server: `AI_BASE_URL`, `AI_API_KEY`, `AI_MODEL` (API bergaya OpenAI). Kunci tidak pernah dikirim ke browser atau disimpan di git.
+- Model gratis OpenCode tidak dipakai: dokumentasinya membatasi model itu untuk dipakai dari OpenCode. Penyedia dan model **belum dipilih**; pilih yang mengizinkan pemanggilan dari aplikasi sendiri dan yang kebijakan datanya bisa diterima, lalu matikan fallback ke penyedia lain.
+- Pengerasan 9router: wajib API key, sandi dashboard diganti, port tidak terbuka ke internet, log permintaan dan Headroom mati.
+
+**Aturan:**
+
+- Minta persetujuan sebelum mengirim; buang foto, nama, email, telepon, alamat, dan tautan.
+- AI tidak boleh mengarang pengalaman atau angka; gunakan tempat kosong seperti `[persentase]`.
+- Hasil AI divalidasi dengan zod; jika tidak valid, coba ulang sekali lalu tampilkan pesan gagal.
+- Hasilnya panduan, bukan skor ATS atau jaminan lolos.
+- Batasi pemakaian per pengunjung dan per hari, dan pasang batas belanja.
+- Editor dan export harus tetap berjalan saat AI mati.
+- Perbarui halaman privasi sebelum fitur AI dirilis.
