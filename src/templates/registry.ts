@@ -1,6 +1,7 @@
 import type { ComponentType } from "react";
 import type { Resume } from "@/lib/schema";
 import { ClassicTemplate } from "@/templates/classic";
+import { ModernTemplate } from "@/templates/modern";
 
 export type TemplateDef = {
   id: string;
@@ -20,8 +21,17 @@ const classic: TemplateDef = {
   supports: { photo: true, sidebar: false },
 };
 
-/** All available templates. Modern and Minimal arrive in Phase 5. */
-export const templates: TemplateDef[] = [classic];
+const modern: TemplateDef = {
+  id: "modern",
+  name: "Modern",
+  thumbnail: "/thumbnails/modern.svg",
+  component: ModernTemplate,
+  defaultTheme: { accent: "#2563eb", font: "Inter", fontSize: 10.5 },
+  supports: { photo: true, sidebar: true },
+};
+
+/** All available templates. */
+export const templates: TemplateDef[] = [classic, modern];
 
 export function getTemplate(id: string): TemplateDef | undefined {
   return templates.find((t) => t.id === id);
