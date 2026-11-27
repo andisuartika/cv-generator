@@ -6,6 +6,7 @@ import { BoldTemplate } from "@/templates/bold";
 import { ClassicTemplate } from "@/templates/classic";
 import { CompactTemplate } from "@/templates/compact";
 import { EditorialTemplate } from "@/templates/editorial";
+import { ExecutiveTemplate } from "@/templates/executive";
 import { MinimalTemplate } from "@/templates/minimal";
 import { ModernTemplate } from "@/templates/modern";
 import { TimelineTemplate } from "@/templates/timeline";
@@ -46,6 +47,7 @@ export const templates: TemplateDef[] = [
   define("editorial", "Editorial", EditorialTemplate),
   define("bold", "Bold", BoldTemplate, { photo: true, sidebar: true }),
   define("accent", "Accent", AccentTemplate, { photo: true }),
+  define("executive", "Executive", ExecutiveTemplate),
 ];
 
 export function getTemplate(id: string): TemplateDef | undefined {
