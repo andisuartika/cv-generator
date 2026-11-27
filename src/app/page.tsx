@@ -1,15 +1,13 @@
 import { ArrowRight, FileText, ShieldCheck } from "lucide-react";
 import Link from "next/link";
-import { A4Canvas } from "@/components/preview/A4Canvas";
+import { TemplateGallery } from "@/components/templates/TemplateGallery";
 import { Button } from "@/components/ui/button";
-import { sampleResume } from "@/lib/defaults";
-import { ClassicTemplate } from "@/templates/classic";
 
-/** Temporary landing page until the template gallery is built (Phase 3). */
+/** Landing page with the template gallery. */
 export default function Home() {
   return (
-    <main className="a4-stage min-h-screen bg-linear-to-b from-primary/10 to-background to-40% px-4 py-12">
-      <div className="a4-stage-nav mx-auto mb-10 flex max-w-2xl flex-col items-center gap-4 text-center">
+    <main className="min-h-screen bg-linear-to-b from-primary/10 to-background to-40% px-4 py-12">
+      <div className="mx-auto mb-10 flex max-w-2xl flex-col items-center gap-4 text-center">
         <span className="flex size-12 items-center justify-center rounded-xl bg-primary text-primary-foreground">
           <FileText aria-hidden="true" className="size-6" />
         </span>
@@ -28,12 +26,12 @@ export default function Home() {
           Tanpa akun. Data tersimpan di browser Anda.
         </p>
       </div>
-      {/* Shrinks the 794 px sheet on small screens; printing keeps full size. */}
-      <div className="overflow-x-auto pb-4 max-[860px]:[zoom:0.75] max-[640px]:[zoom:0.43] print:[zoom:1]">
-        <A4Canvas>
-          <ClassicTemplate data={sampleResume} />
-        </A4Canvas>
-      </div>
+      <section aria-labelledby="templates-heading" className="mx-auto max-w-5xl">
+        <h2 id="templates-heading" className="mb-6 text-center text-xl font-semibold">
+          Pilih template
+        </h2>
+        <TemplateGallery />
+      </section>
     </main>
   );
 }

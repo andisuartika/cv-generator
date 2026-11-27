@@ -28,16 +28,6 @@
     background: #fff;
   }
 
-  /* Elements around the canvas must not add space to the printed page. */
-  .a4-stage {
-    padding: 0;
-    background: none;
-  }
-
-  .a4-stage-nav {
-    display: none;
-  }
-
   .a4-canvas {
     margin: 0;
     box-shadow: none;
