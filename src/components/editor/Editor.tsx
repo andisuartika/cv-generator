@@ -1,6 +1,14 @@
 "use client";
 
-import { Eye, FileText, HardDrive, PencilLine, RotateCcw, TriangleAlert } from "lucide-react";
+import {
+  Eye,
+  FileText,
+  HardDrive,
+  PencilLine,
+  RotateCcw,
+  TriangleAlert,
+  WandSparkles,
+} from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ResumeForm } from "@/components/editor/ResumeForm";
@@ -8,7 +16,8 @@ import { PreviewPane } from "@/components/preview/PreviewPane";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { ConfirmButton } from "@/components/ui/confirm-button";
-import { emptyResume } from "@/lib/defaults";
+import { emptyResume, sampleResume } from "@/lib/defaults";
+import type { Resume } from "@/lib/schema";
 import { resumeStore, type LoadIssue } from "@/store/resume-store";
 
 const LOAD_MESSAGES: Record<LoadIssue, string> = {
@@ -57,10 +66,11 @@ export function Editor() {
 
   const savingDisabled = loadIssue === "corrupt-locked" || loadIssue === "unavailable";
 
-  function clearResume() {
+  /** Replaces the CV content while keeping the chosen template and theme. */
+  function replaceContent(source: Resume) {
     const { resume, replaceResume } = resumeStore.useResume.getState();
     const { templateId, theme } = resume;
-    replaceResume(structuredClone({ ...emptyResume, templateId, theme }));
+    replaceResume(structuredClone({ ...source, templateId, theme }));
   }
 
   return (
@@ -87,17 +97,31 @@ export function Editor() {
               </p>
             </div>
           </div>
-          <ConfirmButton
-            variant="outline"
-            size="lg"
-            title="Kosongkan CV?"
-            description="Semua isian CV akan dihapus dan tidak bisa dikembalikan."
-            confirmLabel="Ya, kosongkan CV"
-            onConfirm={clearResume}
-          >
-            <RotateCcw aria-hidden="true" />
-            Kosongkan
-          </ConfirmButton>
+          {/* Labels are visually hidden on very narrow screens to leave room for the title. */}
+          <div className="flex shrink-0 gap-2">
+            <ConfirmButton
+              variant="outline"
+              size="lg"
+              title="Isi dengan contoh CV?"
+              description="Semua isian saat ini akan diganti dengan data contoh dan tidak bisa dikembalikan."
+              confirmLabel="Ya, isi contoh"
+              onConfirm={() => replaceContent(sampleResume)}
+            >
+              <WandSparkles aria-hidden="true" />
+              <span className="max-sm:sr-only">Contoh</span>
+            </ConfirmButton>
+            <ConfirmButton
+              variant="outline"
+              size="lg"
+              title="Kosongkan CV?"
+              description="Semua isian CV akan dihapus dan tidak bisa dikembalikan."
+              confirmLabel="Ya, kosongkan CV"
+              onConfirm={() => replaceContent(emptyResume)}
+            >
+              <RotateCcw aria-hidden="true" />
+              <span className="max-sm:sr-only">Kosongkan</span>
+            </ConfirmButton>
+          </div>
         </div>
       </header>
       <main className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-start">
