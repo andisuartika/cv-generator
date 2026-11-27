@@ -12,7 +12,8 @@ Baca BLUEPRINT.md sebelum mengerjakan apa pun. Ikuti urutan fase di bagian 10.
 - Fase 3 (preview dua panel, zoom, galeri, ganti template): selesai.
 - Fase 4: sebagian. Export PNG/JPG dan "Cetak / Simpan PDF" selesai; route PDF di server menunggu keputusan hosting.
 - Fase 5 (template Modern dan Minimal): selesai (dikerjakan sebelum sisa Fase 4 atas persetujuan pengguna).
-- Fase berikutnya: sisa Fase 4 (perlu keputusan hosting) atau Fase 6 (polish).
+- Fase 6 (foto, warna aksen, susunan section, impor/ekspor JSON, HP, landing, privasi): selesai; Lighthouse accessibility 96-100. Belum diuji di HP asli.
+- Fase berikutnya: sisa Fase 4 (perlu keputusan hosting), lalu Fase 7 (uji dan deploy).
 - Keputusan terbuka (bagian 2 BLUEPRINT.md): target pengguna, hosting, antarmuka dua bahasa.
 
 Perbarui daftar ini di akhir setiap fase.
