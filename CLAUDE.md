@@ -11,7 +11,8 @@ Baca BLUEPRINT.md sebelum mengerjakan apa pun. Ikuti urutan fase di bagian 10.
 - Fase 2 (form editor, store Zustand + autosave): selesai.
 - Fase 3 (preview dua panel, zoom, galeri, ganti template): selesai.
 - Fase 4: sebagian. Export PNG/JPG dan "Cetak / Simpan PDF" selesai; route PDF di server menunggu keputusan hosting.
-- Fase berikutnya: sisa Fase 4 (perlu keputusan hosting) atau Fase 5 (template Modern dan Minimal).
+- Fase 5 (template Modern dan Minimal): selesai (dikerjakan sebelum sisa Fase 4 atas persetujuan pengguna).
+- Fase berikutnya: sisa Fase 4 (perlu keputusan hosting) atau Fase 6 (polish).
 - Keputusan terbuka (bagian 2 BLUEPRINT.md): target pengguna, hosting, antarmuka dua bahasa.
 
 Perbarui daftar ini di akhir setiap fase.
