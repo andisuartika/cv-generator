@@ -1,0 +1,6 @@
+# For building on a development machine. Do not build on a busy server.
+#   docker compose -f compose.yml -f compose.build.yml up -d --build
+services:
+  app:
+    build: .
+    image: cv-generator:local

@@ -1,8 +1,9 @@
 # Self-hosted deployment. Public access goes through a reverse proxy or tunnel.
+# The image is built by GitHub Actions; the server only pulls it. To build
+# locally instead, add compose.build.yml.
 services:
   app:
-    build: .
-    image: cv-generator
+    image: ${APP_IMAGE:-ghcr.io/andisuartika/cv-generator:latest}
     container_name: cv-generator
     restart: unless-stopped
     ports:
@@ -16,7 +17,7 @@ services:
     pids_limit: 512
     shm_size: 256mb
     cap_drop: [ALL]
-    security_opt: [no-new-privileges:true]
+    security_opt: ["no-new-privileges:true"]
     logging:
       driver: json-file
       options:
